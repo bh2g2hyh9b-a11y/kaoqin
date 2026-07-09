@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 必须和 Mapper 接口的全名一致 -->
+<mapper namespace="com.attendance.mapper.TeacherMapper">
+    <!-- ResultMap：把数据库字段映射到 Java 属性 -->
+    <resultMap id="BaseResultMap" type="com.attendance.entity.Teacher">
+        <id column="id" property="id"/>
+        <result column="teacher_no" property="teacherNo"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <!-- 查询：id 必须和接口方法名一致 -->
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT * FROM teacher WHERE id = #{id}
+    </select>
+
+    <select id="findByTeacherNo" resultMap="BaseResultMap">
+        SELECT * FROM teacher WHERE teacher_no = #{teacherNo}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT * FROM teacher ORDER BY id
+    </select>
+    <!-- 新增：useGeneratedKeys 可以获取自增主键 -->
+    <insert id="insert" parameterType="com.attendance.entity.Teacher" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO teacher (teacher_no, name, password, gender, phone, email)
+        VALUES (#{teacherNo}, #{name}, #{password}, #{gender}, #{phone}, #{email})
+    </insert>
+
+    <update id="update" parameterType="com.attendance.entity.Teacher">
+        UPDATE teacher
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM teacher WHERE id = #{id}
+    </delete>
+
+</mapper>

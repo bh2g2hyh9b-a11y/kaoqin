@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attendance.mapper.AttendanceMapper">
+
+    <resultMap id="BaseResultMap" type="com.attendance.entity.Attendance">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="attendance_date" property="attendanceDate"/>
+        <result column="attendance_time" property="attendanceTime"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="student_name" property="studentName"/>
+        <result column="student_no" property="studentNo"/>
+        <result column="course_name" property="courseName"/>
+    </resultMap>
+
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT a.*, s.name AS student_name, s.student_no, c.course_name
+        FROM attendance a
+        LEFT JOIN student s ON a.student_id = s.id
+        LEFT JOIN course c ON a.course_id = c.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT a.*, s.name AS student_name, s.student_no, c.course_name
+        FROM attendance a
+        LEFT JOIN student s ON a.student_id = s.id
+        LEFT JOIN course c ON a.course_id = c.id
+        ORDER BY a.attendance_date DESC, a.id DESC
+    </select>
+
+    <select id="findByStudentId" resultMap="BaseResultMap">
+        SELECT a.*, s.name AS student_name, s.student_no, c.course_name
+        FROM attendance a
+        LEFT JOIN student s ON a.student_id = s.id
+        LEFT JOIN course c ON a.course_id = c.id
+        WHERE a.student_id = #{studentId}
+        ORDER BY a.attendance_date DESC
+    </select>
+
+    <select id="findByCourseId" resultMap="BaseResultMap">
+        SELECT a.*, s.name AS student_name, s.student_no, c.course_name
+        FROM attendance a
+        LEFT JOIN student s ON a.student_id = s.id
+        LEFT JOIN course c ON a.course_id = c.id
+        WHERE a.course_id = #{courseId}
+        ORDER BY a.attendance_date DESC
+    </select>
+
+    <select id="findByCourseIdAndDate" resultMap="BaseResultMap">
+        SELECT a.*, s.name AS student_name, s.student_no, c.course_name
+        FROM attendance a
+        LEFT JOIN student s ON a.student_id = s.id
+        LEFT JOIN course c ON a.course_id = c.id
+        WHERE a.course_id = #{courseId} AND a.attendance_date = #{attendanceDate}
+        ORDER BY a.id
+    </select>
+
+    <select id="findByStudentIdAndCourseIdAndDate" resultMap="BaseResultMap">
+        SELECT a.*, s.name AS student_name, s.student_no, c.course_name
+        FROM attendance a
+        LEFT JOIN student s ON a.student_id = s.id
+        LEFT JOIN course c ON a.course_id = c.id
+        WHERE a.student_id = #{studentId} AND a.course_id = #{courseId} AND a.attendance_date = #{attendanceDate}
+    </select>
+
+    <insert id="insert" parameterType="com.attendance.entity.Attendance" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO attendance (student_id, course_id, attendance_date, attendance_time, status, remark)
+        VALUES (#{studentId}, #{courseId}, #{attendanceDate}, #{attendanceTime}, #{status}, #{remark})
+    </insert>
+
+    <update id="update" parameterType="com.attendance.entity.Attendance">
+        UPDATE attendance
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM attendance WHERE id = #{id}
+    </delete>
+
+</mapper>

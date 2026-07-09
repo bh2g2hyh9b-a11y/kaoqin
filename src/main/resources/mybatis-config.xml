@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!-- 开启驼峰命名自动映射 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 开启日志 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!-- 配置别名 - 显式指定每个实体类，避免扫描包的编码问题 -->
+    <typeAliases>
+        <typeAlias type="com.attendance.entity.Teacher" alias="Teacher"/>
+        <typeAlias type="com.attendance.entity.Student" alias="Student"/>
+        <typeAlias type="com.attendance.entity.Course" alias="Course"/>
+        <typeAlias type="com.attendance.entity.Attendance" alias="Attendance"/>
+    </typeAliases>
+
+</configuration>

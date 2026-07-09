@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attendance.mapper.StudentMapper">
+
+    <resultMap id="BaseResultMap" type="com.attendance.entity.Student">
+        <id column="id" property="id"/>
+        <result column="student_no" property="studentNo"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="gender" property="gender"/>
+        <result column="class_name" property="className"/>
+        <result column="major" property="major"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT * FROM student WHERE id = #{id}
+    </select>
+
+    <select id="findByStudentNo" resultMap="BaseResultMap">
+        SELECT * FROM student WHERE student_no = #{studentNo}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT * FROM student ORDER BY id
+    </select>
+
+    <select id="findByCourseId" resultMap="BaseResultMap">
+        SELECT s.* FROM student s
+        INNER JOIN student_course sc ON s.id = sc.student_id
+        WHERE sc.course_id = #{courseId}
+        ORDER BY s.id
+    </select>
+
+    <insert id="insert" parameterType="com.attendance.entity.Student" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student (student_no, name, password, gender, class_name, major, phone, email)
+        VALUES (#{studentNo}, #{name}, #{password}, #{gender}, #{className}, #{major}, #{phone}, #{email})
+    </insert>
+
+    <update id="update" parameterType="com.attendance.entity.Student">
+        UPDATE student
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="className != null">class_name = #{className},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM student WHERE id = #{id}
+    </delete>
+
+</mapper>

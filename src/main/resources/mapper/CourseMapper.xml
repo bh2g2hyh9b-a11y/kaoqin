@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attendance.mapper.CourseMapper">
+
+    <resultMap id="BaseResultMap" type="com.attendance.entity.Course">
+        <id column="id" property="id"/>
+        <result column="course_no" property="courseNo"/>
+        <result column="course_name" property="courseName"/>
+        <result column="credit" property="credit"/>
+        <result column="hours" property="hours"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="teacher_name" property="teacherName"/>
+    </resultMap>
+
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT c.*, t.name AS teacher_name
+        FROM course c
+        LEFT JOIN teacher t ON c.teacher_id = t.id
+        WHERE c.id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT c.*, t.name AS teacher_name
+        FROM course c
+        LEFT JOIN teacher t ON c.teacher_id = t.id
+        ORDER BY c.id
+    </select>
+
+    <select id="findByTeacherId" resultMap="BaseResultMap">
+        SELECT c.*, t.name AS teacher_name
+        FROM course c
+        LEFT JOIN teacher t ON c.teacher_id = t.id
+        WHERE c.teacher_id = #{teacherId}
+        ORDER BY c.id
+    </select>
+
+    <select id="findByStudentId" resultMap="BaseResultMap">
+        SELECT c.*, t.name AS teacher_name
+        FROM course c
+        LEFT JOIN teacher t ON c.teacher_id = t.id
+        INNER JOIN student_course sc ON c.id = sc.course_id
+        WHERE sc.student_id = #{studentId}
+        ORDER BY c.id
+    </select>
+
+    <insert id="insert" parameterType="com.attendance.entity.Course" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course (course_no, course_name, credit, hours, teacher_id)
+        VALUES (#{courseNo}, #{courseName}, #{credit}, #{hours}, #{teacherId})
+    </insert>
+
+    <update id="update" parameterType="com.attendance.entity.Course">
+        UPDATE course
+        <set>
+            <if test="courseName != null">course_name = #{courseName},</if>
+            <if test="credit != null">credit = #{credit},</if>
+            <if test="hours != null">hours = #{hours},</if>
+            <if test="teacherId != null">teacher_id = #{teacherId},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM course WHERE id = #{id}
+    </delete>
+
+</mapper>
